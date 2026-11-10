@@ -3,7 +3,8 @@ import os
 # Configure before any app module is imported.
 os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:///./test.db")
 os.environ.setdefault("GITHUB_WEBHOOK_SECRET", "test-secret")
-os.environ.setdefault("LLM_PROVIDER", "fake")
+os.environ["LLM_PROVIDER"] = "fake"
+os.environ["RUN_TESTS"] = "false"
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
