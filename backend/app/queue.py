@@ -19,10 +19,12 @@ async def get_pool() -> ArqRedis:
     return _pool
 
 
-async def enqueue_review(review_id: int) -> None:
+async def enqueue_review(review_id: int, attempt: int = 1) -> None:
     pool = await get_pool()
-    # A fixed job id makes enqueueing idempotent if GitHub redelivers a webhook.
-    await pool.enqueue_job("review_pull_request", review_id, _job_id=f"review:{review_id}")
+    # A fixed job id makes enqueueing idempotent if GitHub redelivers a webhook;
+    # manual retries from the dashboard get a fresh id.
+    job_id = f"review:{review_id}" if attempt == 1 else f"review:{review_id}:retry{attempt}"
+    await pool.enqueue_job("review_pull_request", review_id, _job_id=job_id)
 
 
 async def close_pool() -> None:

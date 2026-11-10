@@ -25,7 +25,7 @@ async def reset_db():
 def enqueued(monkeypatch):
     jobs: list[int] = []
 
-    async def fake_enqueue(review_id: int) -> None:
+    async def fake_enqueue(review_id: int, attempt: int = 1) -> None:
         jobs.append(review_id)
 
     monkeypatch.setattr(queue, "enqueue_review", fake_enqueue)

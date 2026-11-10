@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import queue
-from app.api import webhooks
+from app.api import reviews, webhooks
 from app.config import get_settings
 from app.db import init_db
 
@@ -29,6 +29,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(webhooks.router)
+    app.include_router(reviews.router)
 
     @app.get("/health")
     async def health() -> dict:
