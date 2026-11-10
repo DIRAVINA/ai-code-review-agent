@@ -36,9 +36,9 @@ class Settings(BaseSettings):
     max_comments_per_review: int = 25
 
     # Running the PR's own tests executes untrusted code: off by default,
-    # and only ever inside a network-less Docker container.
+    # and only ever inside a resource-limited Docker container.
     run_tests: bool = False
-    test_command: str = "pytest -q"
+    test_command: str = "pip install -q -r requirements.txt && pytest -q"
     test_image: str = "python:3.12-slim"
     test_timeout_seconds: int = 300
 
