@@ -1,16 +1,22 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app import queue
+from app.api import webhooks
 from app.config import get_settings
 from app.db import init_db
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     yield
+    await queue.close_pool()
 
 
 def create_app() -> FastAPI:
@@ -22,6 +28,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.include_router(webhooks.router)
 
     @app.get("/health")
     async def health() -> dict:
