@@ -28,7 +28,8 @@ from fastapi import FastAPI, Request
 
 MOCK_PORT, API_PORT = 9100, 8100
 SECRET = "e2e-secret"
-REPO, PR, SHA = "octo/shop", 12, "c0ffee" * 6 + "abcd"
+REPO, PR = "octo/shop", 12
+SHA = f"{time.time_ns():x}".ljust(40, "0")  # unique per run, so reruns aren't deduplicated
 CONTENT = (
     "import os\nimport subprocess\n\n\ndef run(cmd):\n"
     '    password = "hunter2hunter2"\n'

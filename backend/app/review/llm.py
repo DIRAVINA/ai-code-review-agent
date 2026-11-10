@@ -59,7 +59,8 @@ class AnthropicProvider:
                     blocks.append(
                         {"type": "tool_use", "id": tc.id, "name": tc.name, "input": tc.args}
                     )
-                out.append({"role": "assistant", "content": blocks})
+                # The API rejects empty assistant turns.
+                out.append({"role": "assistant", "content": blocks or "(no response)"})
             else:
                 out.append(
                     {
